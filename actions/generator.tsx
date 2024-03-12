@@ -24,7 +24,6 @@ export async function GenerateMessage(prompt: string, history: Message[]) {
 
   const response = await chat.sendMessage(prompt);
   const generatedChat = response.response.text();
-  console.log(response.response);
 
   if (!generatedChat) {
     return { error: `Error generating message` };

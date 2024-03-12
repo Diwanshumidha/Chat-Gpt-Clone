@@ -12,6 +12,9 @@ import {
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { RotateCwIcon } from "lucide-react";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { useEffect, useMemo, useState } from "react";
+import { prompts } from "@/lib/constant";
+import useGenerateMessage from "@/hooks/useGenerateMessage";
 
 export default function Home() {
   const { messages, clearMessages } = useMessages();
@@ -21,7 +24,7 @@ export default function Home() {
     <main className=" h-screen pb-5  flex flex-col justify-between  text-white px-5 mx-auto w-full flex-1 ">
       <header className=" py-3 flex justify-between items-center">
         <p className=" text-xl font-bold">
-          ChatGPT <span className=" text-white/40">3.5</span>
+          ChatGPT <span className=" text-white/40">5.5</span>
         </p>
 
         <Button
@@ -74,16 +77,26 @@ export default function Home() {
 }
 
 const Suggestion = () => {
-  const { setValue } = useFormState();
-  return (
+  const [isMounted, setIsMounted] = useState(false);
+  const { handleSubmit } = useGenerateMessage();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const prompt = useMemo(() => {
+    return prompts[(Math.random() * prompts.length) | 0];
+  }, []);
+
+  return isMounted ? (
     <button
-      onClick={() =>
-        setValue("Suggest Fun Activities for Family Visiting San Francisco")
-      }
-      className=" border-white/10 hover:bg-white/10  border px-5 py-4 rounded-xl text-left "
+      onClick={() => {
+        handleSubmit(prompt);
+      }}
+      className="border-white/10 hover:bg-white/10 border px-5 py-4 rounded-xl text-left"
     >
-      <p>Suggest Fun Activities</p>
-      <span>for Family Visiting San Francisco</span>
+      <p>{prompt.split(" ").slice(0, 4).join(" ")}</p>
+      <span>{prompt.split(" ").slice(4, -1).join(" ")}</span>
     </button>
-  );
+  ) : null;
 };

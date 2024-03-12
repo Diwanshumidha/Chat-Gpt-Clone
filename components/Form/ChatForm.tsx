@@ -1,12 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Input, inputClassName } from "../ui/input";
 import { Button } from "../ui/button";
-import { GenerateMessage } from "@/actions/generator";
-import { useMessages } from "@/store/messages";
+
 import { cn } from "@/lib/utils";
 import { Loader, Loader2, Upload, UploadIcon } from "lucide-react";
 import { useFormState } from "@/store/FormState";
+import useGenerateMessage from "@/hooks/useGenerateMessage";
 
 interface FormState {
   inputValue: string;
@@ -15,39 +15,9 @@ interface FormState {
 }
 
 const ChatForm: React.FC = () => {
-  const [formState, setFormState] = useState<FormState>({
-    inputValue: "",
-    pending: false,
-    error: null,
-  });
-  const { state, setError, setPending, setValue } = useFormState();
+  const { state, setValue } = useFormState();
 
-  const { AddMessage, messages } = useMessages();
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    try {
-      e.preventDefault();
-      AddMessage({ role: "user", parts: state.inputValue });
-      setValue("");
-      setPending(true);
-      const response = await GenerateMessage(state.inputValue, messages);
-      if (response) {
-        if (response.error) {
-          throw new Error(response.error);
-        } else if (response.content) {
-          AddMessage({ role: "model", parts: response.content });
-        }
-      }
-    } catch (error) {
-      setError(error instanceof Error ? error.message : "Something went wrong");
-      AddMessage({
-        role: "model",
-        parts: "There Was an Error While Generating Data",
-      });
-    } finally {
-      setPending(false);
-    }
-  };
+  const { handleFormSubmit } = useGenerateMessage();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -61,7 +31,7 @@ const ChatForm: React.FC = () => {
           inputClassName,
           "flex py-0 justify-center items-center container mx-auto h-[50px] rounded-xl bg-transparent border-2 border-white/10 focus-within:border-[1px]  focus-within:border-white "
         )}
-        onSubmit={handleSubmit}
+        onSubmit={handleFormSubmit}
       >
         <Input
           type="text"
