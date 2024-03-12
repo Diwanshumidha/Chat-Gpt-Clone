@@ -1,6 +1,6 @@
 import { Message } from "@/store/messages";
 import React, { useEffect, useRef } from "react";
-import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Markdown from "react-markdown";
 import rehypeColorChips from "rehype-color-chips";
 import remarkGfm from "remark-gfm";
@@ -26,7 +26,13 @@ const Messages = ({ messages }: { messages: Message[] }) => {
             <div>
               <Avatar className=" size-8">
                 {isBotMessage ? (
-                  <AvatarFallback className="bg-blue-600">C</AvatarFallback>
+                  <>
+                    {" "}
+                    <AvatarFallback className="bg-blue-600">C</AvatarFallback>
+                    <div className=" p-1 bg-white rounded-full grid place-content-center">
+                      <AvatarImage className="size-8" src="/chatgpt.svg" />
+                    </div>
+                  </>
                 ) : (
                   <AvatarFallback className="bg-green-600">D</AvatarFallback>
                 )}
@@ -67,6 +73,9 @@ const Loader = () => {
       <div>
         <Avatar className=" size-8">
           <AvatarFallback className="bg-blue-600">C</AvatarFallback>
+          <div className=" p-1 bg-white rounded-full grid place-content-center">
+            <AvatarImage className="size-8" src="/chatgpt.svg" />
+          </div>
         </Avatar>
       </div>
       <div className=" space-y-2 w-full">

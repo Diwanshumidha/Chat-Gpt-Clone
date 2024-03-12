@@ -5,19 +5,28 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useFormState } from "@/store/FormState";
 import { useMessages } from "@/store/messages";
+import {
+  RegisterLink,
+  LoginLink,
+  LogoutLink,
+} from "@kinde-oss/kinde-auth-nextjs/components";
 import { RotateCwIcon } from "lucide-react";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 
 export default function Home() {
   const { messages, clearMessages } = useMessages();
-  const { setError } = useFormState();
+  const { setError, state } = useFormState();
+
   return (
     <main className=" h-screen pb-5  flex flex-col justify-between  text-white px-5 mx-auto w-full flex-1 ">
       <header className=" py-3 flex justify-between items-center">
         <p className=" text-xl font-bold">
           ChatGPT <span className=" text-white/40">3.5</span>
         </p>
+
         <Button
           variant={"outline"}
+          disabled={state.pending}
           onClick={() => {
             clearMessages();
             setError("");
@@ -27,11 +36,22 @@ export default function Home() {
         </Button>
       </header>
       {messages.length <= 0 ? (
-        <div className="flex justify-center items-center h-full flex-1 gap-10 container    flex-col ">
-          <h1 className="text-3xl font-bold text-center">
-            How can I help you today?
-          </h1>
-          <div className=" grid grid-cols-2 gap-3 w-full ">
+        <div className="flex justify-center items-center h-full flex-1 gap-10 container  flex-col py-5 ">
+          <div className="space-y-4 flex-1  flex flex-col justify-center items-center">
+            <div className=" bg-white p-3 rounded-full w-fit mx-auto">
+              <img
+                src="/chatgpt.svg"
+                alt="Chatgpt"
+                className="size-8"
+                width={32}
+                height={32}
+              />
+            </div>
+            <h1 className="text-3xl font-bold text-center">
+              How can I help you today?
+            </h1>
+          </div>
+          <div className=" grid grid-cols-2 gap-3 w-full self-end   ">
             <Suggestion />
             <Suggestion />
             <Suggestion />

@@ -9,15 +9,6 @@ type State =
 import { Message } from "@/store/messages";
 import { GoogleGenerativeAI, InputContent } from "@google/generative-ai";
 
-const instructions = {
-  roaster: {
-    user: `I am Giving You this as an instruction for further messages and the instruction is you have to act as roaster and Create Roast: Based on the user's input, craft a witty response that playfully teases or mocks the user.
-  Delivery: Deliver the roast in a light-hearted manner, ensuring it's funny but not offensive.
-  Interaction: Allow the user to respond to the roast and continue the interaction in the roasting mode if desired.`,
-    model: `Absolutely, I'm ready to roast like a perfectly seasoned chicken!  Just throw me a topic about yourself, a hobby, or anything you'd like a good-natured ribbing about, and I'll craft a hilarious (and harmless) roast. Remember, the best roasts come from a place of love, so don't be shy – bring it on!`,
-  },
-};
-
 const Api_Key = process.env.GEMINI_API_KEY;
 if (!Api_Key) {
   throw new Error("No Gemini key ");
@@ -26,17 +17,6 @@ const genAI = new GoogleGenerativeAI(Api_Key);
 
 export async function GenerateMessage(prompt: string, history: Message[]) {
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-  const initialMessageInstruction: InputContent[] = [
-    {
-      role: "user",
-      parts: instructions.roaster.user,
-    },
-    {
-      role: "model",
-      parts: instructions.roaster.model,
-    },
-  ];
 
   const chat = model.startChat({
     history,
