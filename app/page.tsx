@@ -5,13 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useFormState } from "@/store/FormState";
 import { useMessages } from "@/store/messages";
-import {
-  RegisterLink,
-  LoginLink,
-  LogoutLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
 import { RotateCwIcon } from "lucide-react";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useEffect, useMemo, useState } from "react";
 import { prompts } from "@/lib/constant";
 import useGenerateMessage from "@/hooks/useGenerateMessage";
