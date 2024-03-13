@@ -15,10 +15,12 @@ import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { useEffect, useMemo, useState } from "react";
 import { prompts } from "@/lib/constant";
 import useGenerateMessage from "@/hooks/useGenerateMessage";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function Home() {
   const { messages, clearMessages } = useMessages();
   const { setError, state } = useFormState();
+  const isMobile = useMediaQuery("(max-width:1024px)");
 
   return (
     <main className=" h-screen pb-5  flex flex-col justify-between  text-white px-5 mx-auto w-full flex-1 ">
@@ -54,11 +56,15 @@ export default function Home() {
               How can I help you today?
             </h1>
           </div>
-          <div className=" grid grid-cols-2 gap-3 w-full self-end   ">
+          <div className=" grid lg:grid-cols-2  gap-3 w-full self-end   ">
             <Suggestion />
             <Suggestion />
-            <Suggestion />
-            <Suggestion />
+            {!isMobile ? (
+              <>
+                <Suggestion />
+                <Suggestion />
+              </>
+            ) : null}
           </div>
         </div>
       ) : null}
@@ -93,10 +99,14 @@ const Suggestion = () => {
       onClick={() => {
         handleSubmit(prompt);
       }}
-      className="border-white/10 hover:bg-white/10 border px-5 py-4 rounded-xl text-left"
+      className="border-white/10 hover:bg-white/10 border focus:bg-white/10  px-5 py-4 rounded-xl text-left"
     >
-      <p>{prompt.split(" ").slice(0, 4).join(" ")}</p>
-      <span>{prompt.split(" ").slice(4, -1).join(" ")}</span>
+      <p className=" font-semibold">
+        {prompt.split(" ").slice(0, 4).join(" ")}
+      </p>
+      <span className=" text-white/70">
+        {prompt.split(" ").slice(4, -1).join(" ")}
+      </span>
     </button>
   ) : null;
 };

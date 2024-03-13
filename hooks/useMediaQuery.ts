@@ -1,17 +1,57 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
-export function useMediaQuery(query: string) {
-  const [matches, setMatches] = useState(false);
+type UseMediaQueryOptions = {
+  defaultValue?: boolean;
+  initializeWithValue?: boolean;
+};
 
-  useEffect(() => {
-    const matchQueryList = window.matchMedia(query);
-    function handleChange(e: MediaQueryListEvent) {
-      setMatches(e.matches);
+const IS_SERVER = typeof window === "undefined";
+
+export function useMediaQuery(
+  query: string,
+  {
+    defaultValue = false,
+    initializeWithValue = true,
+  }: UseMediaQueryOptions = {}
+): boolean {
+  const getMatches = (query: string): boolean => {
+    if (IS_SERVER) {
+      return defaultValue;
     }
-    matchQueryList.addEventListener("change", handleChange);
+    return window.matchMedia(query).matches;
+  };
+
+  const [matches, setMatches] = useState<boolean>(() => {
+    if (initializeWithValue) {
+      return getMatches(query);
+    }
+    return defaultValue;
+  });
+
+  // Handles the change event of the media query.
+  function handleChange() {
+    setMatches(getMatches(query));
+  }
+
+  useLayoutEffect(() => {
+    const matchMedia = window.matchMedia(query);
+
+    // Triggered at the first client-side load and if query changes
+    handleChange();
+
+    // Use deprecated `addListener` and `removeListener` to support Safari < 14 (#135)
+    if (matchMedia.addListener) {
+      matchMedia.addListener(handleChange);
+    } else {
+      matchMedia.addEventListener("change", handleChange);
+    }
 
     return () => {
-      matchQueryList.removeEventListener("change", handleChange);
+      if (matchMedia.removeListener) {
+        matchMedia.removeListener(handleChange);
+      } else {
+        matchMedia.removeEventListener("change", handleChange);
+      }
     };
   }, [query]);
 

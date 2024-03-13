@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 import { Avatar } from "@radix-ui/react-avatar";
 import { ChevronLeft, PenBoxIcon, SparklesIcon } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ScrollArea } from "../ui/scroll-area";
 import { useMessages } from "@/store/messages";
@@ -49,8 +49,8 @@ const Sidebar = () => {
     <div className="flex">
       <div
         className={cn(
-          "  h-screen bg-[#171717] text-white transition-all  duration-300 relative overflow-x-hidden overflow-y-auto ",
-          IsOpen ? "w-[250px] xl:w-[300px] px-3 pt-5" : "w-[0px]  "
+          "  h-screen bg-[#171717] text-white transition-all  duration-300 relative overflow-x-hidden overflow-y-auto hidden md:block ",
+          IsOpen ? "md:w-[250px] xl:w-[330px]  px-3 pt-5" : "md:w-full"
         )}
       >
         <div className={cn("flex flex-col gap-5 h-full", !IsOpen && "hidden")}>
@@ -76,7 +76,7 @@ const Sidebar = () => {
             <PenBoxIcon size={20} />
           </button>
 
-          <div className=" overflow-auto   flex-1   ">
+          <div className=" overflow-auto scrollbar-hide   flex-1   ">
             <div className="relative space-y-7 py-4 px-3 ">
               {/* <div className=" absolute right-0 w-[10px]  h-full bg-gradient-to-r from-transparent to-themeBackground"></div> */}
               <div className="space-y-4">
@@ -147,7 +147,10 @@ const Sidebar = () => {
           </div>
         </div>
       </div>
-      <button onClick={() => setIsOpen((prev) => !prev)} className=" group">
+      <button
+        onClick={() => setIsOpen((prev) => !prev)}
+        className=" md:block hidden group"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"

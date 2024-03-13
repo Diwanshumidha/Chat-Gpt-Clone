@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/site/Sidebar";
+import Script from "next/script";
+import ChatbotWidgetScript from "@/components/widget";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-themeBackground flex `}>
         <Sidebar />
-
+        <ChatbotWidgetScript />
         {children}
       </body>
     </html>
